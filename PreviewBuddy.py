@@ -1530,12 +1530,23 @@ def check_for_recovery_files(dummy):
 
 def register():
     
-    # 1) Register core Quick-Preview classes
+    # 1) Register PropertyGroups first (dependencies)
     bpy.utils.register_class(CameraFrameRange)
+    bpy.utils.register_class(QuickPreviewQueueItem)
+    
+    # 2) Register Operators
     bpy.utils.register_class(QUICKPREVIEW_OT_render)
     bpy.utils.register_class(QUICKPREVIEW_OT_set_output_path)
+    bpy.utils.register_class(QUICKPREVIEW_OT_debug_panel)
+    bpy.utils.register_class(QUICKPREVIEW_OT_delete_camera_range)
+    bpy.utils.register_class(QUICKPREVIEW_OT_restore_settings)
+    bpy.utils.register_class(QUICKPREVIEW_OT_add_to_queue)
+    bpy.utils.register_class(QUICKPREVIEW_OT_remove_queue_item)
+    bpy.utils.register_class(QUICKPREVIEW_OT_clear_queue)
+    bpy.utils.register_class(QUICKPREVIEW_OT_set_queue_output_path)
+    bpy.utils.register_class(QUICKPREVIEW_OT_process_queue)
     
-    # Set panel ordering with bl_order
+  # Set panel ordering with bl_order
     QUICKPREVIEW_PT_queue_test.bl_order = 0           # First position (render queue)
     QUICKPREVIEW_PT_camera_settings.bl_order = 1      # Second position
     QUICKPREVIEW_PT_panel.bl_order = 2                # Third position (main panel/button)
@@ -1543,31 +1554,15 @@ def register():
     QUICKPREVIEW_PT_performance.bl_order = 4          # Fifth position
     QUICKPREVIEW_PT_about.bl_order = 5                # Last position
    
-    # Register all panel classes
+
+    # 3) Register Panels 
+    bpy.utils.register_class(QUICKPREVIEW_PT_queue_test)
     bpy.utils.register_class(QUICKPREVIEW_PT_panel)
     bpy.utils.register_class(QUICKPREVIEW_PT_camera_settings)
     bpy.utils.register_class(QUICKPREVIEW_PT_output_settings)
     bpy.utils.register_class(QUICKPREVIEW_PT_performance)
-    bpy.utils.register_class(QUICKPREVIEW_OT_debug_panel)
-    bpy.utils.register_class(QUICKPREVIEW_OT_delete_camera_range)
     bpy.utils.register_class(QUICKPREVIEW_PT_about)
 
-    
-    # Register the settings restoration operator
-    bpy.utils.register_class(QUICKPREVIEW_OT_restore_settings)
-
-    # 2) Register the queue PropertyGroup
-    bpy.utils.register_class(QuickPreviewQueueItem)
-    # and add the CollectionProperty to Scene
-    bpy.types.Scene.quickpreview_queue = bpy.props.CollectionProperty(type=QuickPreviewQueueItem)
-
-    # 3) Register queue operators & panel
-    bpy.utils.register_class(QUICKPREVIEW_OT_add_to_queue)
-    bpy.utils.register_class(QUICKPREVIEW_OT_remove_queue_item)
-    bpy.utils.register_class(QUICKPREVIEW_OT_clear_queue)
-    bpy.utils.register_class(QUICKPREVIEW_OT_process_queue)
-    bpy.utils.register_class(QUICKPREVIEW_OT_set_queue_output_path)  
-    bpy.utils.register_class(QUICKPREVIEW_PT_queue_test)
    
     # 4) Register all of your Scene-level properties
     # Add progress tracking properties
@@ -1768,29 +1763,14 @@ def register():
 
 def unregister():
 
-    
+    # 1) Remove handlers first (if you have any)
+    if initialize_output_paths in bpy.app.handlers.load_post:
+        bpy.app.handlers.load_post.remove(initialize_output_paths)
+    if check_for_recovery_files in bpy.app.handlers.load_post:
+        bpy.app.handlers.load_post.remove(check_for_recovery_files)
 
-    # 2) Unregister the queue classes in reverse order of registration
-    bpy.utils.unregister_class(QUICKPREVIEW_PT_queue_test)
-    bpy.utils.unregister_class(QUICKPREVIEW_OT_process_queue)
-    bpy.utils.unregister_class(QUICKPREVIEW_OT_clear_queue)
-    bpy.utils.unregister_class(QUICKPREVIEW_OT_remove_queue_item)
-    bpy.utils.unregister_class(QUICKPREVIEW_OT_add_to_queue)
-    bpy.utils.unregister_class(QuickPreviewQueueItem)
-
-    # 3) Then your existing Quick Preview unregisters
-    bpy.utils.unregister_class(QUICKPREVIEW_PT_about)
-    bpy.utils.unregister_class(QUICKPREVIEW_OT_delete_camera_range)
-    bpy.utils.unregister_class(QUICKPREVIEW_OT_debug_panel)
-    bpy.utils.unregister_class(QUICKPREVIEW_PT_performance)
-    bpy.utils.unregister_class(QUICKPREVIEW_PT_output_settings)
-    bpy.utils.unregister_class(QUICKPREVIEW_PT_camera_settings)
-    bpy.utils.unregister_class(QUICKPREVIEW_PT_panel)
-    bpy.utils.unregister_class(QUICKPREVIEW_OT_set_output_path)
-    bpy.utils.unregister_class(QUICKPREVIEW_OT_render)
-    bpy.utils.unregister_class(CameraFrameRange)
-
-    # 4) And finally delete any Scene-level props you added
+    # Delete scene properties
+    del bpy.types.Scene.quickpreview_queue
     del bpy.types.Scene.quickpreview_debug_mode
     del bpy.types.Scene.quickpreview_output_path
     del bpy.types.Scene.quickpreview_camera_ranges
@@ -1815,5 +1795,34 @@ def unregister():
     del bpy.types.Scene.quickpreview_output_format
     del bpy.types.Scene.quickpreview_video_quality
     del bpy.types.Scene.quickpreview_image_quality
+    del bpy.types.Scene.quickpreview_burn_metadata
+    del bpy.types.Scene.quickpreview_metadata_fontsize
+
+    # 3) Unregister Panels (reverse order)
+    bpy.utils.unregister_class(QUICKPREVIEW_PT_about)
+    bpy.utils.unregister_class(QUICKPREVIEW_PT_performance)
+    bpy.utils.unregister_class(QUICKPREVIEW_PT_output_settings)
+    bpy.utils.unregister_class(QUICKPREVIEW_PT_camera_settings)
+    bpy.utils.unregister_class(QUICKPREVIEW_PT_panel)
+    bpy.utils.unregister_class(QUICKPREVIEW_PT_queue_test)
+
+    # 4) Unregister Operators (reverse order)
+    bpy.utils.unregister_class(QUICKPREVIEW_OT_process_queue)
+    bpy.utils.unregister_class(QUICKPREVIEW_OT_set_queue_output_path)
+    bpy.utils.unregister_class(QUICKPREVIEW_OT_clear_queue)
+    bpy.utils.unregister_class(QUICKPREVIEW_OT_remove_queue_item)
+    bpy.utils.unregister_class(QUICKPREVIEW_OT_add_to_queue)
+    bpy.utils.unregister_class(QUICKPREVIEW_OT_restore_settings)
+    bpy.utils.unregister_class(QUICKPREVIEW_OT_delete_camera_range)
+    bpy.utils.unregister_class(QUICKPREVIEW_OT_debug_panel)
+    bpy.utils.unregister_class(QUICKPREVIEW_OT_set_output_path)
+    bpy.utils.unregister_class(QUICKPREVIEW_OT_render)
+    
+    # 5) Unregister PropertyGroups last
+    bpy.utils.unregister_class(QuickPreviewQueueItem)
+    bpy.utils.unregister_class(CameraFrameRange)
+    
+
+
 if __name__ == "__main__":
     register()
