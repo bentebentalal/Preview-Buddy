@@ -1749,6 +1749,10 @@ def register():
         min=0, max=100,
         default=90
     )
+
+    bpy.types.Scene.quickpreview_queue = bpy.props.CollectionProperty(type=QuickPreviewQueueItem)
+
+
     # 5) Hook in the persistent handlers
     bpy.app.handlers.load_post.append(initialize_output_paths)
     bpy.app.handlers.load_post.append(check_for_recovery_files)
