@@ -1,0 +1,177 @@
+# Preview Buddy Release Checklist
+
+## 📁 Essential Files & Documentation
+
+### README.md
+- [ ] Installation instructions
+- [ ] Feature list with descriptions
+- [ ] Quick start guide
+- [ ] System requirements (Blender 3.0+)
+- [ ] Known issues/limitations
+- [ ] Version history/changelog
+- [ ] Support contact info
+
+### Additional Documentation
+- [ ] LICENSE file (GPL or chosen license)
+- [ ] CHANGELOG.md for version history
+- [ ] Installation PDF guide for Gumroad/SuperHive
+
+## 🖼️ Visual Assets
+
+### Screenshots
+- [ ] Main panel interface
+- [ ] Camera settings panel
+- [ ] Output settings panel
+- [ ] Performance settings panel
+- [ ] Render queue panel
+- [ ] Example of burned metadata on preview
+
+### Demo Content
+- [ ] 30-60 second GIF showing core workflow
+- [ ] 1-2 minute video tutorial
+- [ ] Before/after examples showing the problem it solves
+
+## 📝 Marketing Copy
+
+### Short Description (Twitter/Reddit)
+Preview Buddy 2.6.6 - Blender addon for quick viewport renders with per-camera frame range memory, render queue, and incremental saves. Perfect for iterating on animations!
+
+### Feature List
+🎬 **Key Features:**
+- Per-camera frame range memory
+- Batch render queue system
+- Incremental/overwrite save modes
+- Multiple output formats (MP4, MOV, PNG/JPEG sequences)
+- Burn metadata into previews
+- Crash recovery system
+- Custom output paths
+- Resolution & FPS overrides
+- Progress bar with real-time updates
+
+### Unique Selling Points
+⭐ **What Makes Preview Buddy Special:**
+- Remembers different frame ranges for each camera
+- Never lose your render settings after a crash
+- Queue multiple cameras for batch rendering
+- Visual progress feedback during renders
+- One-click "Make Preview" workflow
+
+## 🚀 Platform-Specific Content
+
+### BlenderArtists.org Post
+# Preview Buddy 2.6.6 - Quick Viewport Renders with Camera Memory
+
+Hey Blender Artists!
+
+I've created an addon that solves a workflow problem I've had for years: quickly creating viewport previews while remembering different frame ranges for each camera.
+
+[Include main GIF/video here]
+
+## Key Features:
+- 🎥 Per-camera frame range memory
+- 📋 Render queue for batch processing
+- 💾 Incremental & overwrite save modes
+- 🎞️ Multiple formats (MP4, MOV, PNG/JPEG sequences)
+- 📝 Burn metadata into previews
+- 🔄 Crash recovery system
+- 📊 Real-time progress bar
+
+## Download:
+- [SuperHive Market](link) - Pay what you want
+- [Gumroad](link) - Alternative download
+
+## Support:
+- Website: filmicart.com
+- Buy me a coffee: ko-fi.com/bentebent
+
+[Include screenshots of UI panels]
+
+Works with Blender 3.0+
+
+### Reddit Post Template
+Title: I made a Blender addon that remembers frame ranges for each camera - Preview Buddy
+
+Finally finished my addon that solves the annoying problem of viewport previews forgetting your frame ranges when switching cameras!
+
+[GIF showing the workflow]
+
+Key features:
+- Per-camera frame range memory
+- Batch render queue
+- Crash recovery (never lose your render settings!)
+- Multiple output formats
+- Metadata burning
+
+Free/pay-what-you-want on SuperHive Market and Gumroad.
+
+Happy to answer any questions!
+
+### Twitter Post
+🚀 Just released Preview Buddy for #b3d!
+
+Finally, viewport previews that remember frame ranges for each camera! Plus:
+✨ Render queue
+✨ Crash recovery  
+✨ Metadata burning
+✨ Progress bars
+
+Free/pay-what-you-want
+
+#blender3d #blenderaddon
+
+[Include GIF]
+[Links]
+
+## 📋 Pre-Launch Checklist
+
+### Code Preparation
+- [ ] Remove debug mode or set to False by default
+- [ ] Test on Blender 3.0, 3.6, 4.0+
+- [ ] Clean up any commented code
+- [ ] Verify version number (2.6.6)
+- [ ] Add proper file header with license
+
+### Testing
+- [ ] Fresh Blender install test
+- [ ] Test all features work as expected
+- [ ] Verify crash recovery works
+- [ ] Test on Windows/Mac/Linux (if possible)
+
+### Distribution Package
+- [ ] Create .zip with just the necessary files
+- [ ] Include README in the .zip
+- [ ] Name format: `preview_buddy_v2.6.6.zip`
+
+## 🎯 Launch Strategy
+
+### Day 1: Soft Launch
+1. Upload to SuperHive Market & Gumroad
+2. Post on BlenderArtists.org
+3. Share with close contacts for initial feedback
+
+### Day 2-3: Main Promotion
+1. Post on Reddit (r/blender)
+2. Tweet announcement
+3. Share in relevant Discord servers
+
+### Day 4-7: Follow-up
+1. Post in additional subreddits (space out)
+2. Respond to all questions/feedback
+3. Post in Facebook groups
+4. Consider YouTube tutorial if good response
+
+## 💬 Support Plan
+
+- Monitor all platforms daily for first week
+- Respond to questions within 24 hours
+- Create FAQ based on common questions
+- Set up issue tracker on GitHub (if open source)
+- Prepare to release 2.6.7 with quick fixes if needed
+
+## 📈 Success Metrics to Track
+
+- Downloads on each platform
+- User feedback and feature requests
+- Bug reports and resolution time
+- Social media engagement
+- Support emails received

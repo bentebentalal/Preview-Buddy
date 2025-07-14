@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Preview Buddy",
     "author": "Bentebent",
-    "version": (1, 0, 1),
+    "version": (1, 0, 0),
     "blender": (3, 0, 0),
     "location": "3D Viewport > Sidebar > Preview Buddy",
     "description": "Quick viewport renders with per-camera frame range memory, render queue, incremental/overwrite modes and more",
@@ -896,35 +896,24 @@ class QUICKPREVIEW_OT_render(Operator):
             has_vse_audio, has_scene_audio = detect_audio_sources(scene)
             debug_log(f"Audio sources detected: VSE audio: {has_vse_audio}, Scene audio: {has_scene_audio}")
 
-        # Render with appropriate audio parameters
-            if scene.quickpreview_use_final_render:
-                debug_log("Using Final Render Engine (Eevee or Cycles)")
-                # Handle audio for final render
-                if has_vse_audio or has_scene_audio:
-                    debug_log("Final render with audio")
-                    original_use_sequencer = scene.render.use_sequencer if hasattr(scene.render, 'use_sequencer') else False
-                    if has_vse_audio:
-                        scene.render.use_sequencer = True
-                    
-                    bpy.ops.render.render(animation=True)
-                    
-                    # Restore sequencer setting
-                    if hasattr(scene.render, 'use_sequencer'):
-                        scene.render.use_sequencer = original_use_sequencer
-                else:
-                    debug_log("Final render without audio")
-                    bpy.ops.render.render(animation=True)
+            # Render with appropriate audio parameters
+            if has_vse_audio:
+                debug_log("Rendering with VSE audio")
+                # Try to enable audio without using sequencer mode
+                # Directly use FFMPEG audio settings
+                scene.render.ffmpeg.audio_codec = 'AAC'
+                
+                # Render the viewport
+                bpy.ops.render.opengl(animation=True)
+                
+            elif has_scene_audio:
+                debug_log("Rendering with scene audio")
+                # Ensure audio codec is set
+                scene.render.ffmpeg.audio_codec = 'AAC'
+                bpy.ops.render.opengl(animation=True)
             else:
-                # Keep existing OpenGL behavior for fast previews
-                if has_vse_audio:
-                    debug_log("Rendering OpenGL with VSE audio")
-                    bpy.ops.render.opengl(animation=True)
-                elif has_scene_audio:
-                    debug_log("Rendering OpenGL with scene audio")
-                    bpy.ops.render.opengl(animation=True)
-                else:
-                    debug_log("Rendering OpenGL without audio")
-                    bpy.ops.render.opengl(animation=True)
+                debug_log("No audio sources detected, rendering without audio")
+                bpy.ops.render.opengl(animation=True)
             
             # Set progress to 100% after successful render
             scene.quickpreview_progress = 1.0
@@ -1169,15 +1158,6 @@ class QUICKPREVIEW_PT_output_settings(Panel):
         # Open After Render and Open Output Folder options
         layout.prop(scene, "quickpreview_open_after_render")
         layout.prop(scene, "quickpreview_open_output_folder")
-
-        layout.separator()
-        layout.prop(scene, "quickpreview_use_final_render")
-        
-        # Optional UX improvement
-        if scene.quickpreview_use_final_render:
-            box = layout.box()
-            box.label(text="⚠️ Final Render mode is slower", icon='INFO')
-            box.label(text="Uses full engine render with all settings")
         
         # Add a separator before other output settings
         layout.separator()
@@ -1599,12 +1579,6 @@ def register():
         default=False
     )
    
-    bpy.types.Scene.quickpreview_use_final_render = bpy.props.BoolProperty(
-        name="Use Final Render Engine",
-        description="Use Eevee or Cycles full render instead of fast OpenGL preview (respects samples, denoising, etc.)",
-        default=False
-    )
-
    # Performance: Simplify toggle
     bpy.types.Scene.quickpreview_use_simplify = BoolProperty(
         name="Use Simplify",
@@ -1825,8 +1799,6 @@ def unregister():
     del bpy.types.Scene.quickpreview_image_quality
     del bpy.types.Scene.quickpreview_burn_metadata
     del bpy.types.Scene.quickpreview_metadata_fontsize
-    del bpy.types.Scene.quickpreview_use_final_render
-
 
     # 3) Unregister Panels (reverse order)
     bpy.utils.unregister_class(QUICKPREVIEW_PT_about)
