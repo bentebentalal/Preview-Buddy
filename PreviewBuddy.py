@@ -1,7 +1,11 @@
 bl_info = {
     "name": "Preview Buddy",
     "author": "Bentebent",
+<<<<<<< HEAD
     "version": (1, 0, 1),
+=======
+    "version": (1, 0, 0),
+>>>>>>> f87a8db64e7ee46a0faa6fdc5b2dfe30cf09bb9f
     "blender": (3, 0, 0),
     "location": "3D Viewport > Sidebar > Preview Buddy",
     "description": "Quick viewport renders with per-camera frame range memory, render queue, incremental/overwrite modes and more",
